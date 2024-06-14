@@ -19,14 +19,8 @@ services:
     ports:
       - "8080:80"
   pyDataIngest:
+    depends_on: [pgdatabase]
     image: taxi_ingest:v001
-    environment:
-      - user=root
-      - port=5432
-      - db=ny_taxi
-      - user=root
-      - password=root
-      - table=yellow_taxi_trips
-      - url="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+    command: ["--host=pg-database", "--port=5432", "--db=ny_taxi", "--user=root", "--password=root", "--table=yellow_taxi_trips", "--url=\"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz\""]
 volumes:
   pgadmin_conn_data:
