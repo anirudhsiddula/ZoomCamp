@@ -1,0 +1,27 @@
+
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v /$(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5430:5432 \
+  postgres:13
+
+
+docker network create pg-network
+
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v /Users/batman/Learning/ZoomCamp/1.1/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5430:5432 \
+  --network pg-database \
+  --name pg-database
+  postgres:13
+
+docker run -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v /Users/batman/Learning/ZoomCamp/1.1/ny_taxi_postgres_data:/var/lib/postgresql/data -p 5430:5432 --network pg-database --name pg-database postgres:13
+
+
+
+
