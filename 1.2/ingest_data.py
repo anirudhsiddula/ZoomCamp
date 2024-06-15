@@ -28,7 +28,7 @@ def main(params):
     
     print(f"Downloading {url} to {csv_name}")
     
-    os.system(f"curl {url} -o {csv_name}")
+    os.system(f"curl -o {csv_name} {url}")
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 

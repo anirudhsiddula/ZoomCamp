@@ -1,26 +1,39 @@
 services:
   pgdatabase:
     image: postgres:13
+    networks:
+      - pg-network
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=ny_taxi
     volumes:
-      - "./ny_taxi_postgres_data:/var/lib/postgresql/data:rw"
+      - ./ny_taxi_postgres_data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
   pgadmin:
     image: dpage/pgadmin4
+    depends_on: 
+      - pgdatabase
+    networks:
+      - pg-network
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=root
     volumes:
-      - "pgadmin_conn_data:/var/lib/pgadmin:rw"
+      - pgadmin_conn_data:/var/lib/pgadmin:rw
     ports:
       - "8080:80"
   pyDataIngest:
-    depends_on: [pgdatabase]
+    depends_on: 
+      - pgdatabase
     image: taxi_ingest:v001
-    command: ["--host=pg-database", "--port=5432", "--db=ny_taxi", "--user=root", "--password=root", "--table=yellow_taxi_trips", "--url=\"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz\""]
+    networks:
+      - pg-network
+    command: ["--host=pgdatabase", "--port=5432", "--db=ny_taxi", "--user=root", "--password=root", "--table=yellow_taxi_trips", "--url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"]
 volumes:
   pgadmin_conn_data:
+  ny_taxi_postgres_data:
+networks:
+  pg-network:
+    driver: bridge
