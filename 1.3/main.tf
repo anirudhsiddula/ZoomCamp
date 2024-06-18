@@ -8,13 +8,14 @@ terraform {
 }
 
 provider "google" {
-  project = "splendid-planet-426504-t8"
-  region  = "us-west1"
+  project     = var.project
+  region      = var.region
+  credentials = file(var.credentials)
 }
 
-resource "google_storage_bucket" "demo-bucket" {
-  name          = "splendid-planet-bucket"
-  location      = "US"
+resource "google_storage_bucket" "demo_bucket" {
+  name          = var.gcs_bucket_name
+  location      = var.location
   force_destroy = true
 
   lifecycle_rule {
@@ -25,4 +26,9 @@ resource "google_storage_bucket" "demo-bucket" {
       type = "AbortIncompleteMultipartUpload"
     }
   }
+}
+
+resource "google_bigquery_dataset" "demo_dataset" {
+  dataset_id = var.bq_dataset_name
+  location   = var.location
 }

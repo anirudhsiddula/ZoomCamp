@@ -65,6 +65,15 @@ docker run -it \
   postgres:13
 ```
 
+docker run -d \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5430:5432 \
+  postgres:13
+
+
 If you see that `ny_taxi_postgres_data` is empty after running
 the container, try these:
 
@@ -186,7 +195,7 @@ python ingest_data.py \
   --user=root \
   --password=root \
   --host=localhost \
-  --port=5432 \
+  --port=5430 \
   --db=ny_taxi \
   --table_name=yellow_taxi_trips \
   --url=${URL}
