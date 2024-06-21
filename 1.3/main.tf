@@ -20,7 +20,7 @@ resource "google_storage_bucket" "demo_bucket" {
 
   lifecycle_rule {
     condition {
-      age = 1
+       age = 1
     }
     action {
       type = "AbortIncompleteMultipartUpload"

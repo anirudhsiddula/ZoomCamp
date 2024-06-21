@@ -1,0 +1,38 @@
+services:
+  pgdatabase_1:
+    image: postgres:13
+    networks:
+      - pg-network
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
+    volumes:
+      - ./ny_taxi_postgres_data:/var/lib/postgresql/data:rw
+    ports:
+      - "5431:5432"
+  pgadmin_1:
+    image: dpage/pgadmin4
+    depends_on: 
+      - pgdatabase_1
+    networks:
+      - pg-network
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+      - ./pgadmin_conn_data:/var/lib/pgadmin:rw
+    ports:
+      - "8080:80"
+  pyDataIngest_1:
+    depends_on: 
+      - pgdatabase_1
+    image: taxi_ingest:v002
+    networks:
+      - pg-network
+volumes:
+  pgadmin_conn_data:
+  ny_taxi_postgres_data:
+networks:
+  pg-network:
+    driver: bridge
